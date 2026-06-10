@@ -1,0 +1,55 @@
+name: Restore working hero image source
+
+on:
+  push:
+    paths:
+      - ".github/workflows/restore-working-hero-image.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore-hero-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Remove broken image override
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("hero-complete.js")
+          source = path.read_text(encoding="utf-8")
+
+          # script.js creates the hero image with the working embedded portrait.
+          # Remove every later assignment that replaces it with the broken SVG asset.
+          lines = [
+              line for line in source.splitlines()
+              if "heroPhoto.src =" not in line
+          ]
+          source = "\n".join(lines) + "\n"
+
+          # Keep the full portrait visible and prevent any visual blur.
+          source = source.replace("object-fit:cover;", "object-fit:contain;")
+          source = source.replace("object-position:center 36%;", "object-position:center center;")
+          source = source.replace("filter:saturate(1.02) contrast(1.015);", "filter:none;")
+
+          path.write_text(source, encoding="utf-8")
+          PY
+
+      - name: Commit restored image source
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Working hero image source is already restored."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add hero-complete.js
+          git commit -m "Restore working hero portrait source [skip ci]"
+          git push
