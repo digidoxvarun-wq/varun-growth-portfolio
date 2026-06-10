@@ -56,6 +56,135 @@
     });
   });
 
+  function initialiseServicesSlider() {
+    const servicesGrid = document.querySelector(".services-grid");
+    if (!servicesGrid || servicesGrid.dataset.sliderReady === "true") return;
+
+    servicesGrid.dataset.sliderReady = "true";
+    servicesGrid.setAttribute("role", "region");
+    servicesGrid.setAttribute("aria-label", "Growth services slider");
+
+    const serviceCards = [...servicesGrid.querySelectorAll(".service-card")];
+    if (serviceCards.length < 2) return;
+
+    const style = document.createElement("style");
+    style.textContent = `
+      .services-section{overflow:hidden}
+      .services-slider-shell{position:relative}
+      .services-grid[data-slider-ready="true"]{
+        display:flex!important;
+        gap:18px;
+        overflow-x:auto;
+        scroll-snap-type:x mandatory;
+        scroll-behavior:smooth;
+        scrollbar-width:none;
+        overscroll-behavior-inline:contain;
+        padding:4px 2px 18px;
+      }
+      .services-grid[data-slider-ready="true"]::-webkit-scrollbar{display:none}
+      .services-grid[data-slider-ready="true"] .service-card{
+        flex:0 0 calc((100% - 36px)/3);
+        min-width:0;
+        scroll-snap-align:start;
+        display:flex;
+        flex-direction:column;
+        min-height:460px;
+      }
+      .services-grid[data-slider-ready="true"] .service-card>p{min-height:70px}
+      .services-grid[data-slider-ready="true"] .service-card ul{grid-template-columns:1fr;margin:22px 0}
+      .services-grid[data-slider-ready="true"] .service-card li{font-size:.72rem;padding:10px 11px}
+      .services-grid[data-slider-ready="true"] .service-footer{margin-top:auto;align-items:flex-start;flex-direction:column}
+      .services-grid[data-slider-ready="true"] .service-footer a{text-align:left}
+      .services-slider-controls{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:22px}
+      .services-slider-status{display:flex;align-items:center;gap:12px;color:#94a3b8;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+      .services-slider-progress{width:min(320px,42vw);height:4px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden}
+      .services-slider-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:inherit;transition:width .25s ease}
+      .services-slider-buttons{display:flex;gap:10px}
+      .services-slider-button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font-size:1.15rem;font-weight:900;transition:.2s ease}
+      .services-slider-button:hover:not(:disabled){background:#fff;color:#081126;transform:translateY(-2px)}
+      .services-slider-button:disabled{opacity:.35;cursor:not-allowed}
+      @media(max-width:1100px){
+        .services-grid[data-slider-ready="true"] .service-card{flex-basis:calc((100% - 18px)/2)}
+      }
+      @media(max-width:720px){
+        .services-grid[data-slider-ready="true"]{gap:14px;padding-bottom:12px}
+        .services-grid[data-slider-ready="true"] .service-card{flex-basis:88%;min-height:430px}
+        .services-slider-controls{align-items:flex-end}
+        .services-slider-progress{width:42vw}
+        .services-slider-button{width:42px;height:42px}
+      }
+      @media(max-width:430px){
+        .services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}
+        .services-slider-status{font-size:.62rem;gap:8px}
+        .services-slider-progress{width:34vw}
+      }
+    `;
+    document.head.appendChild(style);
+
+    const shell = document.createElement("div");
+    shell.className = "services-slider-shell";
+    servicesGrid.parentNode.insertBefore(shell, servicesGrid);
+    shell.appendChild(servicesGrid);
+
+    const controls = document.createElement("div");
+    controls.className = "services-slider-controls";
+    controls.innerHTML = `
+      <div class="services-slider-status" aria-live="polite">
+        <span class="services-slider-count">01 / ${String(serviceCards.length).padStart(2, "0")}</span>
+        <div class="services-slider-progress" aria-hidden="true"><span></span></div>
+      </div>
+      <div class="services-slider-buttons">
+        <button class="services-slider-button services-prev" type="button" aria-label="View previous services">←</button>
+        <button class="services-slider-button services-next" type="button" aria-label="View next services">→</button>
+      </div>
+    `;
+    shell.appendChild(controls);
+
+    const previousButton = controls.querySelector(".services-prev");
+    const nextButton = controls.querySelector(".services-next");
+    const counter = controls.querySelector(".services-slider-count");
+    const progress = controls.querySelector(".services-slider-progress span");
+
+    function cardStep() {
+      const firstCard = serviceCards[0];
+      const gap = Number.parseFloat(getComputedStyle(servicesGrid).gap) || 0;
+      return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    function currentIndex() {
+      return Math.max(0, Math.min(serviceCards.length - 1, Math.round(servicesGrid.scrollLeft / cardStep())));
+    }
+
+    function updateSliderUi() {
+      const index = currentIndex();
+      const maxScroll = Math.max(0, servicesGrid.scrollWidth - servicesGrid.clientWidth);
+      const percentage = maxScroll ? (servicesGrid.scrollLeft / maxScroll) * 100 : 100;
+      counter.textContent = `${String(index + 1).padStart(2, "0")} / ${String(serviceCards.length).padStart(2, "0")}`;
+      progress.style.width = `${Math.max(8, Math.min(100, percentage))}%`;
+      previousButton.disabled = servicesGrid.scrollLeft <= 4;
+      nextButton.disabled = servicesGrid.scrollLeft >= maxScroll - 4;
+    }
+
+    function move(direction) {
+      servicesGrid.scrollBy({ left: cardStep() * direction, behavior: "smooth" });
+      trackEvent("services_slider_navigation", { direction: direction > 0 ? "next" : "previous" });
+    }
+
+    previousButton.addEventListener("click", () => move(-1));
+    nextButton.addEventListener("click", () => move(1));
+    servicesGrid.addEventListener("scroll", updateSliderUi, { passive: true });
+    window.addEventListener("resize", updateSliderUi);
+
+    servicesGrid.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") move(1);
+      if (event.key === "ArrowLeft") move(-1);
+    });
+
+    updateSliderUi();
+  }
+
+  initialiseServicesSlider();
+
   function isValidUrl(value) {
     if (!value.trim()) return true;
     try {
