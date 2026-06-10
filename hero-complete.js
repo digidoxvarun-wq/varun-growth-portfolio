@@ -7,8 +7,8 @@
 
   if (!heroPhoto || !heroPanel || !heroVisual) return;
 
-  // Use the repository-managed portrait asset instead of the large inline image.
-  heroPhoto.src = "assets/images/varun_hero_photo.svg";
+  // Keep the working portrait already injected by script.js.
+  // The previous repository SVG asset rendered as a blurred placeholder.
   heroPhoto.alt = "Varun Kumar working on performance marketing and digital growth strategy";
   heroPhoto.loading = "eager";
   heroPhoto.decoding = "async";
@@ -47,21 +47,25 @@
       mask-image:linear-gradient(to bottom,black 0%,transparent 88%);
     }
     .hero-photo-panel.hero-section-complete:after{
-      background:linear-gradient(180deg,rgba(10,15,44,0) 58%,rgba(10,15,44,.16) 100%);
+      background:linear-gradient(180deg,rgba(10,15,44,0) 68%,rgba(10,15,44,.08) 100%);
       z-index:1;
+      pointer-events:none;
     }
     .hero-section-complete .hero-person-photo{
+      position:absolute;
+      inset:0;
       z-index:0;
       width:100%;
       height:100%;
-      object-fit:cover;
-      object-position:center 32%;
-      filter:saturate(1.02) contrast(1.015);
+      object-fit:contain;
+      object-position:center center;
+      filter:none;
+      opacity:1;
     }
     .hero-section-complete .floating-metric{
       z-index:3;
       border:1px solid rgba(255,255,255,.92);
-      background:rgba(255,255,255,.9);
+      background:rgba(255,255,255,.92);
       box-shadow:0 18px 50px rgba(10,15,44,.15);
     }
     .hero-section-complete .floating-metric strong{color:#0A0F2C}
@@ -76,11 +80,9 @@
     }
     @media(max-width:1100px){
       .hero-photo-panel.hero-section-complete{min-height:570px}
-      .hero-section-complete .hero-person-photo{object-position:center 28%}
     }
     @media(max-width:720px){
       .hero-photo-panel.hero-section-complete{min-height:470px}
-      .hero-section-complete .hero-person-photo{object-position:center 24%}
       .hero-section-complete .metric-roas{top:14px;left:10px}
       .hero-section-complete .metric-spend{top:88px;right:8px}
       .hero-section-complete .metric-cpa{bottom:48px;left:10px}
