@@ -9,7 +9,6 @@
 
   // Keep the working portrait already injected by script.js.
   // The previous repository SVG asset rendered as a blurred placeholder.
-  heroPhoto.src = "assets/images/varun_hero_photo.svg?v=2";
   heroPhoto.alt = "Varun Kumar working on performance marketing and digital growth strategy";
   heroPhoto.loading = "eager";
   heroPhoto.decoding = "async";
@@ -58,8 +57,8 @@
       z-index:0;
       width:100%;
       height:100%;
-      object-fit:cover;
-      object-position:center 36%;
+      object-fit:contain;
+      object-position:center center;
       filter:none;
       opacity:1;
     }
