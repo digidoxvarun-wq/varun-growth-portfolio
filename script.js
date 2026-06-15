@@ -7,6 +7,10 @@
   const form = document.querySelector("#lead-form");
   const formMessage = document.querySelector("#form-message");
 
+  const layoutPatch = document.createElement("style");
+  layoutPatch.textContent = ".testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}@media(max-width:720px){.testimonials-grid{grid-template-columns:1fr}}";
+  document.head.appendChild(layoutPatch);
+
   window.trackEvent = function trackEvent(eventName, data = {}) {
     const payload = { event: eventName, ...data, timestamp: new Date().toISOString() };
     console.info("[tracking-placeholder]", payload);
