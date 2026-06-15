@@ -8,8 +8,40 @@
   const formMessage = document.querySelector("#form-message");
 
   const layoutPatch = document.createElement("style");
-  layoutPatch.textContent = ".testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}@media(max-width:720px){.testimonials-grid{grid-template-columns:1fr}}";
+  layoutPatch.textContent = `
+    .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .score-section{overflow:hidden}
+    .score-section .container{width:100%;max-width:none}
+    .score-section .section-heading{width:min(calc(100% - 40px),760px)}
+    .score-grid{display:flex!important;grid-template-columns:none!important;gap:18px;width:max-content;animation:scoreMarquee 28s linear infinite;padding:4px 18px 12px;will-change:transform}
+    .score-grid:hover{animation-play-state:paused}
+    .score-grid article{flex:0 0 clamp(280px,31vw,420px);min-height:150px}
+    .score-grid article[aria-hidden="true"]{pointer-events:none}
+    @keyframes scoreMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    @media(max-width:720px){
+      .testimonials-grid{grid-template-columns:1fr}
+      .score-section .section-heading{width:min(calc(100% - 28px),760px)}
+      .score-grid{gap:14px;animation-duration:24s;padding-inline:14px}
+      .score-grid article{flex-basis:82vw;min-height:135px}
+    }
+    @media(prefers-reduced-motion:reduce){.score-grid{animation:none;overflow-x:auto;width:auto}}
+  `;
   document.head.appendChild(layoutPatch);
+
+  function initialiseScoreMarquee() {
+    const scoreGrid = document.querySelector(".score-grid");
+    if (!scoreGrid || scoreGrid.dataset.marqueeReady === "true") return;
+
+    scoreGrid.dataset.marqueeReady = "true";
+    const originalCards = [...scoreGrid.children];
+    originalCards.forEach((card) => {
+      const clone = card.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      scoreGrid.appendChild(clone);
+    });
+  }
+
+  initialiseScoreMarquee();
 
   window.trackEvent = function trackEvent(eventName, data = {}) {
     const payload = { event: eventName, ...data, timestamp: new Date().toISOString() };
