@@ -1,15 +1,21 @@
 (() => {
   "use strict";
 
+  const VARUN_HERO_IMAGE = "assets/images/varun-hero.png";
   const header = document.querySelector(".site-header");
   const navToggle = document.querySelector(".nav-toggle");
   const navMenu = document.querySelector(".nav-menu");
   const form = document.querySelector("#lead-form");
   const formMessage = document.querySelector("#form-message");
-  const VARUN_HERO_IMAGE = "assets/images/varun-hero.png";
+
+  window.trackEvent = function trackEvent(eventName, data = {}) {
+    const payload = { event: eventName, ...data, timestamp: new Date().toISOString() };
+    console.info("[tracking-placeholder]", payload);
+  };
 
   const layoutPatch = document.createElement("style");
   layoutPatch.textContent = `
+    .recommendation-section{display:none!important}
     .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 
     .hero-grid{grid-template-columns:1fr 1fr;align-items:center}
@@ -51,11 +57,7 @@
     .services-slider-button:hover:not(:disabled){background:#fff;color:#07111f;transform:translateY(-2px)}
     .services-slider-button:disabled{opacity:.35;cursor:not-allowed}
 
-    @media(max-width:1100px){
-      .hero-grid{grid-template-columns:1fr}
-      .hero-visual{max-width:720px;margin-inline:auto}
-      .hero-photo-panel{min-height:560px}
-    }
+    @media(max-width:1100px){.hero-grid{grid-template-columns:1fr}.hero-visual{max-width:720px;margin-inline:auto}.hero-photo-panel{min-height:560px}}
     @media(max-width:720px){
       .testimonials-grid{grid-template-columns:1fr}
       .hero-photo-panel{min-height:500px;border-radius:26px}
@@ -72,12 +74,7 @@
       .services-slider-progress{width:42vw}
       .services-slider-button{width:42px;height:42px}
     }
-    @media(max-width:430px){
-      .hero-photo-panel{min-height:430px}
-      .services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}
-      .services-slider-status{font-size:.62rem;gap:8px}
-      .services-slider-progress{width:34vw}
-    }
+    @media(max-width:430px){.hero-photo-panel{min-height:430px}.services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}.services-slider-status{font-size:.62rem;gap:8px}.services-slider-progress{width:34vw}}
     @media(prefers-reduced-motion:reduce){.score-grid{animation:none;overflow-x:auto;width:auto}}
   `;
   document.head.appendChild(layoutPatch);
@@ -101,13 +98,16 @@
     visual.appendChild(dashboard);
   }
 
+  function removeRecommendationSection() {
+    document.querySelector(".recommendation-section")?.remove();
+  }
+
   function initialiseScoreMarquee() {
     const scoreGrid = document.querySelector(".score-grid");
     if (!scoreGrid || scoreGrid.dataset.marqueeReady === "true") return;
 
     scoreGrid.dataset.marqueeReady = "true";
-    const originalCards = [...scoreGrid.children];
-    originalCards.forEach((card) => {
+    [...scoreGrid.children].forEach((card) => {
       const clone = card.cloneNode(true);
       clone.setAttribute("aria-hidden", "true");
       scoreGrid.appendChild(clone);
@@ -138,8 +138,8 @@
         <div class="services-slider-progress" aria-hidden="true"><span></span></div>
       </div>
       <div class="services-slider-buttons">
-        <button class="services-slider-button services-prev" type="button" aria-label="View previous services">←</button>
-        <button class="services-slider-button services-next" type="button" aria-label="View next services">→</button>
+        <button class="services-slider-button services-prev" type="button" aria-label="View previous services">&#8592;</button>
+        <button class="services-slider-button services-next" type="button" aria-label="View next services">&#8594;</button>
       </div>
     `;
     shell.appendChild(controls);
@@ -150,9 +150,8 @@
     const progress = controls.querySelector(".services-slider-progress span");
 
     function cardStep() {
-      const firstCard = serviceCards[0];
       const gap = Number.parseFloat(getComputedStyle(servicesGrid).gap) || 0;
-      return firstCard.getBoundingClientRect().width + gap;
+      return serviceCards[0].getBoundingClientRect().width + gap;
     }
 
     function currentIndex() {
@@ -181,20 +180,16 @@
     updateSliderUi();
   }
 
-  restoreHeroImage();
-  initialiseScoreMarquee();
-  initialiseServicesSlider();
-
-  window.trackEvent = function trackEvent(eventName, data = {}) {
-    const payload = { event: eventName, ...data, timestamp: new Date().toISOString() };
-    console.info("[tracking-placeholder]", payload);
-  };
-
   function updateNavbar() {
     header?.classList.toggle("scrolled", window.scrollY > 20);
   }
 
+  restoreHeroImage();
+  removeRecommendationSection();
+  initialiseScoreMarquee();
+  initialiseServicesSlider();
   updateNavbar();
+
   window.addEventListener("scroll", updateNavbar, { passive: true });
 
   navToggle?.addEventListener("click", () => {
@@ -236,9 +231,7 @@
     formMessage.className = "form-message";
     formMessage.textContent = "";
 
-    const requiredFields = [...form.querySelectorAll("[required]")];
-    const invalidField = requiredFields.find((field) => !field.value.trim());
-
+    const invalidField = [...form.querySelectorAll("[required]")].find((field) => !field.value.trim());
     if (invalidField) {
       formMessage.classList.add("error");
       formMessage.textContent = "Please complete all required fields.";
@@ -263,10 +256,7 @@
     }
 
     const data = Object.fromEntries(new FormData(form).entries());
-    trackEvent("lead_form_submit", {
-      service: data.service,
-      adSpend: data.adSpend
-    });
+    trackEvent("lead_form_submit", { service: data.service, adSpend: data.adSpend });
 
     const subject = encodeURIComponent(`Growth Discovery Call Request - ${data.businessName}`);
     const body = encodeURIComponent(
