@@ -147,54 +147,6 @@
       pointer-events:none;
     }
 
-    .hero-stats-band{
-      position:relative;
-      z-index:4;
-      margin-top:-38px;
-      padding:0 0 20px;
-      background:linear-gradient(180deg,rgba(7,17,31,0) 0,rgba(7,17,31,0) 46%,#f8fafc 46%,#f8fafc 100%);
-    }
-    .hero-stats-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      background:#fff;
-      border:1px solid rgba(219,227,239,.95);
-      border-radius:28px;
-      overflow:hidden;
-      box-shadow:0 26px 70px rgba(15,23,42,.12);
-    }
-    .hero-stats-grid article{
-      padding:34px 18px 30px;
-      text-align:center;
-      position:relative;
-    }
-    .hero-stats-grid article:not(:last-child):after{
-      content:"";
-      position:absolute;
-      top:24px;
-      right:0;
-      width:1px;
-      height:calc(100% - 48px);
-      background:linear-gradient(180deg,rgba(219,227,239,0),rgba(219,227,239,.95) 18%,rgba(219,227,239,.95) 82%,rgba(219,227,239,0));
-    }
-    .hero-stats-grid strong{
-      display:block;
-      color:#0f172a;
-      font-family:"Space Grotesk",Inter,system-ui,sans-serif;
-      font-size:clamp(2rem,3.25vw,3.35rem);
-      line-height:.95;
-      letter-spacing:-.06em;
-    }
-    .hero-stats-grid span{
-      display:block;
-      margin-top:10px;
-      color:#475569;
-      font-size:.8rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
     .score-section{overflow:hidden}
     .score-section .container{width:100%;max-width:none}
     .score-section .section-heading{width:min(calc(100% - 40px),760px)}
@@ -220,17 +172,8 @@
     .services-slider-button:hover:not(:disabled){background:#fff;color:#07111f;transform:translateY(-2px)}
     .services-slider-button:disabled{opacity:.35;cursor:not-allowed}
 
-    @media(max-width:1180px){
-      .dashboard-bottom{display:none}
-      .hero-stats-grid strong{font-size:clamp(1.85rem,3vw,2.8rem)}
-    }
-    @media(max-width:1100px){
-      .hero-grid{gap:26px 40px}
-      .hero-copy > h1{max-width:620px;font-size:clamp(2.9rem,6vw,4.85rem)}
-      .hero-photo-panel{min-height:600px}
-      .hero-stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .hero-stats-grid article:nth-child(2):after{display:none}
-    }
+    @media(max-width:1180px){.dashboard-bottom{display:none}}
+    @media(max-width:1100px){.hero-grid{gap:26px 40px}.hero-copy > h1{max-width:620px;font-size:clamp(2.9rem,6vw,4.85rem)}.hero-photo-panel{min-height:600px}}
     @media(max-width:900px){
       .hero-grid{
         grid-template-columns:1fr;
@@ -248,7 +191,6 @@
       .dashboard-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
       .system-map{flex-direction:column}
       .system-flow-arrow{transform:rotate(90deg);margin-left:10px;align-self:flex-start}
-      .hero-stats-band{margin-top:-24px}
     }
     @media(max-width:720px){
       .testimonials-grid{grid-template-columns:1fr}
@@ -263,12 +205,6 @@
       .hero-actions .btn{width:100%}
       .system-map div{width:100%}
       .hero-photo-panel{min-height:500px;border-radius:26px}
-      .hero-stats-band{margin-top:-18px;padding-bottom:14px;background:linear-gradient(180deg,rgba(7,17,31,0) 0,rgba(7,17,31,0) 38%,#f8fafc 38%,#f8fafc 100%)}
-      .hero-stats-grid{grid-template-columns:1fr;border-radius:24px}
-      .hero-stats-grid article{padding:24px 18px}
-      .hero-stats-grid article:after{display:none}
-      .hero-stats-grid article:not(:last-child){border-bottom:1px solid #e2e8f0}
-      .hero-stats-grid strong{font-size:2rem}
       .score-section .section-heading{width:min(calc(100% - 28px),760px)}
       .score-grid{gap:14px;animation-duration:24s;padding-inline:14px}
       .score-grid article{flex-basis:82vw;min-height:135px}
@@ -286,8 +222,6 @@
       .dashboard-top strong{font-size:.94rem}
       .dashboard-kpis strong{font-size:.95rem}
       .system-map div{padding:12px}
-      .hero-stats-grid strong{font-size:1.78rem}
-      .hero-stats-grid span{font-size:.73rem}
       .services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}
       .services-slider-status{font-size:.62rem;gap:8px}
       .services-slider-progress{width:34vw}
