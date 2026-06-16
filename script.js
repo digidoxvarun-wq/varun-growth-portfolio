@@ -18,12 +18,96 @@
     .recommendation-section{display:none!important}
     .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 
-    .hero-grid{grid-template-columns:1fr 1fr;align-items:center}
-    .hero-visual{position:relative;display:grid;gap:20px}
-    .hero-photo-panel{position:relative;min-height:640px;border:1px solid rgba(255,255,255,.12);border-radius:34px;background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));overflow:hidden;box-shadow:0 35px 90px rgba(0,0,0,.34)}
-    .hero-person-photo{position:absolute;inset:auto 0 0 0;width:100%;height:100%;object-fit:cover;object-position:center top;filter:saturate(1.03) contrast(1.02)}
-    .hero-photo-panel:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,17,31,0) 62%,rgba(7,17,31,.3) 100%);pointer-events:none}
-    .hero-visual .hero-dashboard{width:100%;transform:none}
+    .hero-grid{
+      grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
+      grid-template-areas:
+        "copy visual"
+        "support visual";
+      align-items:start;
+      gap:28px 64px;
+    }
+    .hero-copy{grid-area:copy;display:flex;flex-direction:column;align-items:flex-start}
+    .hero-support{grid-area:support;display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+    .hero-copy > h1{max-width:640px}
+    .hero-copy > .hero-dashboard{order:4;margin-top:24px}
+    .hero-copy > .hero-actions{order:5;margin-top:22px}
+    .hero-support .text-link{padding:0}
+    .hero-support .micro-benefits{margin:0;justify-content:flex-start}
+
+    .hero-dashboard{
+      width:min(100%,720px);
+      border:1px solid rgba(103,232,249,.18);
+      border-radius:26px;
+      padding:20px 22px;
+      background:linear-gradient(160deg,rgba(13,27,51,.88),rgba(7,17,31,.78));
+      box-shadow:0 24px 60px rgba(0,0,0,.24);
+      backdrop-filter:blur(10px);
+    }
+    .dashboard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+    .dashboard-top > div{display:flex;flex-direction:column;gap:6px}
+    .dashboard-top strong{font-size:1rem;line-height:1.2;letter-spacing:-.02em}
+    .dashboard-label{font-size:.7rem;letter-spacing:.16em;color:#93c5fd}
+    .live-pill i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#22c55e;margin-right:5px}
+
+    .dashboard-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0 12px}
+    .dashboard-kpis > div,.channel{
+      background:rgba(5,11,25,.58);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:12px 13px;
+    }
+    .dashboard-kpis span,.dashboard-kpis small{display:block;font-size:.64rem;color:#94a3b8}
+    .dashboard-kpis strong{display:block;font-size:1rem;margin:5px 0}
+    .dashboard-kpis small{color:#67e8f9}
+
+    .system-map{display:flex;align-items:stretch;gap:10px;margin:0}
+    .system-map div{
+      flex:1;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      background:rgba(255,255,255,.05);
+    }
+    .system-map strong,.system-map span{display:block}
+    .system-map strong{font-size:.86rem}
+    .system-map span{color:#94a3b8;font-size:.74rem;line-height:1.45;margin-top:4px}
+    .system-flow-arrow{align-self:center;flex:0 0 auto;color:#67e8f9;font-size:1rem;font-weight:800;opacity:.85}
+
+    .dashboard-bottom{display:flex;gap:10px;margin-top:12px}
+    .channel{display:flex;align-items:center;gap:10px;flex:1}
+    .channel-icon{width:29px;height:29px;display:grid;place-items:center;border-radius:8px;font-size:.68rem;font-weight:900}
+    .channel-icon.meta{background:linear-gradient(135deg,#2563eb,#06b6d4)}
+    .channel-icon.google{background:#fff;color:#2563eb}
+    .channel small,.channel strong{display:block}
+    .channel small{font-size:.58rem;color:#94a3b8}
+    .channel strong{font-size:.72rem}
+
+    .hero-visual{grid-area:visual;position:relative;display:block;align-self:end}
+    .hero-photo-panel{
+      position:relative;
+      min-height:640px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:34px;
+      background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));
+      overflow:hidden;
+      box-shadow:0 35px 90px rgba(0,0,0,.34);
+    }
+    .hero-person-photo{
+      position:absolute;
+      inset:auto 0 0 0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:center top;
+      filter:saturate(1.03) contrast(1.02);
+    }
+    .hero-photo-panel:after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg,rgba(7,17,31,0) 62%,rgba(7,17,31,.3) 100%);
+      pointer-events:none;
+    }
 
     .score-section{overflow:hidden}
     .score-section .container{width:100%;max-width:none}
@@ -50,9 +134,36 @@
     .services-slider-button:hover:not(:disabled){background:#fff;color:#07111f;transform:translateY(-2px)}
     .services-slider-button:disabled{opacity:.35;cursor:not-allowed}
 
-    @media(max-width:1100px){.hero-grid{grid-template-columns:1fr}.hero-visual{max-width:720px;margin-inline:auto}.hero-photo-panel{min-height:560px}}
+    @media(max-width:1180px){.dashboard-bottom{display:none}}
+    @media(max-width:1100px){.hero-grid{gap:26px 40px}.hero-copy > h1{max-width:580px}.hero-photo-panel{min-height:600px}}
+    @media(max-width:900px){
+      .hero-grid{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "copy"
+          "visual"
+          "support";
+        gap:28px;
+      }
+      .hero-copy > .hero-actions{order:4;margin-top:22px}
+      .hero-copy > .hero-dashboard{order:5;margin-top:20px}
+      .hero-visual{max-width:680px;margin:0 auto;width:100%}
+      .hero-photo-panel{min-height:560px}
+      .dashboard-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .system-map{flex-direction:column}
+      .system-flow-arrow{transform:rotate(90deg);margin-left:10px;align-self:flex-start}
+    }
     @media(max-width:720px){
       .testimonials-grid{grid-template-columns:1fr}
+      .hero-support{gap:12px}
+      .hero-support .text-link{padding:0}
+      .hero-copy > h1{max-width:100%}
+      .dashboard-top{flex-direction:column;align-items:flex-start;gap:12px}
+      .dashboard-kpis{grid-template-columns:1fr}
+      .hero-dashboard{padding:18px 18px 16px}
+      .hero-actions{align-items:stretch;width:100%}
+      .hero-actions .btn{width:100%}
+      .system-map div{width:100%}
       .hero-photo-panel{min-height:500px;border-radius:26px}
       .score-section .section-heading{width:min(calc(100% - 28px),760px)}
       .score-grid{gap:14px;animation-duration:24s;padding-inline:14px}
@@ -64,15 +175,23 @@
       .services-slider-progress{width:42vw}
       .services-slider-button{width:42px;height:42px}
     }
-    @media(max-width:430px){.hero-photo-panel{min-height:430px}.services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}.services-slider-status{font-size:.62rem;gap:8px}.services-slider-progress{width:34vw}}
+    @media(max-width:430px){
+      .hero-photo-panel{min-height:430px}
+      .dashboard-top strong{font-size:.94rem}
+      .dashboard-kpis strong{font-size:.95rem}
+      .system-map div{padding:12px}
+      .services-grid[data-slider-ready="true"] .service-card{flex-basis:94%}
+      .services-slider-status{font-size:.62rem;gap:8px}
+      .services-slider-progress{width:34vw}
+    }
     @media(prefers-reduced-motion:reduce){.score-grid{animation:none;overflow-x:auto;width:auto}}
   `;
   document.head.appendChild(layoutPatch);
 
   function restoreHeroImage() {
     const heroGrid = document.querySelector(".hero-grid");
-    const dashboard = document.querySelector(".hero-dashboard");
-    if (!heroGrid || !dashboard || document.querySelector(".hero-visual")) return;
+    const heroSupport = document.querySelector(".hero-support");
+    if (!heroGrid || document.querySelector(".hero-visual")) return;
 
     const visual = document.createElement("div");
     visual.className = "hero-visual";
@@ -81,8 +200,13 @@
         <img class="hero-person-photo" src="${VARUN_HERO_IMAGE}" alt="Varun Kumar, Digital Growth and AI Automation Professional">
       </div>
     `;
+
+    if (heroSupport) {
+      heroGrid.insertBefore(visual, heroSupport);
+      return;
+    }
+
     heroGrid.appendChild(visual);
-    visual.appendChild(dashboard);
   }
 
   function removeRecommendationSection() {
