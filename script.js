@@ -119,9 +119,10 @@
     .channel small{font-size:.58rem;color:#94a3b8}
     .channel strong{font-size:.72rem}
 
-    .hero-visual{grid-area:visual;position:relative;display:block;align-self:end}
+    .hero-visual{grid-area:visual;position:relative;display:block;align-self:stretch}
     .hero-photo-panel{
       position:relative;
+      height:100%;
       min-height:640px;
       border:1px solid rgba(255,255,255,.12);
       border-radius:34px;
@@ -189,7 +190,7 @@
       .hero-copy > .hero-actions{order:4;margin-top:22px}
       .hero-copy > .hero-dashboard{order:5;margin-top:20px}
       .hero-copy > h1{max-width:100%}
-      .hero-visual{max-width:680px;margin:0 auto;width:100%}
+      .hero-visual{max-width:680px;margin:0 auto;width:100%;align-self:start}
       .hero-photo-panel{min-height:560px}
       .dashboard-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
       .system-map{flex-direction:column}
