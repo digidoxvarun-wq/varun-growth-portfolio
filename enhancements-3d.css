@@ -155,6 +155,16 @@
 .engine-terminal-line .cursor{display:inline-block;width:7px;background:#86efac;margin-left:2px;animation:cursorBlink 1s step-end infinite}
 @keyframes cursorBlink{50%{opacity:0}}
 
+.bridge-copy strong span[data-upgrade-counter]{
+  display:inline!important;
+  color:inherit!important;
+  font-size:inherit!important;
+  font-weight:inherit!important;
+  letter-spacing:0!important;
+  text-transform:none!important;
+  margin:0!important;
+}
+
 @media(max-width:900px){
   .engine-stage{height:560px;max-width:520px}
   .n1,.n2,.n3,.n4{left:6%}
